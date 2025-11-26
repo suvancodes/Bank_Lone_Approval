@@ -1,1 +1,3 @@
-venv
+venv/
+logs/
+Bank_Loan_Approval_Prediction.egg-info/
