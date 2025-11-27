@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from src.pipeline.prediction_pipeline import CustomData, PredictPipeline
+import os
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")  # required for session
 
 @app.route("/", methods=["GET"])
 def index():
@@ -19,12 +21,10 @@ def _to_number(v, cast=int, default=0):
 
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
-    # if someone opens /predict in browser, send them to landing page
     if request.method == "GET":
         return redirect(url_for("index"))
 
     try:
-        # accept form POST (from home.html) or JSON (AJAX)
         payload = request.get_json() if request.is_json else request.form.to_dict()
 
         data = CustomData(
@@ -45,17 +45,27 @@ def predict():
         pred = int(preds[0]) if hasattr(preds, "__len__") else int(preds)
         label = "Approved" if pred == 1 else "Rejected"
 
-        # return JSON for AJAX, otherwise render home with result
+        # JSON/AJAX clients get JSON response
         if request.is_json:
             return {"success": True, "result": {"label": label, "prediction": pred}}, 200
-        return render_template("home.html", result=label)
+
+        # For form POSTs: store result in session and redirect to result page
+        session['last_result'] = label
+        return redirect(url_for('result'))
 
     except Exception as e:
         if request.is_json:
             return {"success": False, "error": str(e)}, 500
         return render_template("home.html", error=str(e))
 
+@app.route("/result", methods=["GET"])
+def result():
+    label = session.pop('last_result', None)
+    if not label:
+        return redirect(url_for('home'))
+    return render_template("result.html", result=label)
+
 if __name__ == "__main__":
     print('server runs in : http://localhost:5000/')
-    app.run(debug=True)
-    
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
