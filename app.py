@@ -56,5 +56,6 @@ def predict():
         return render_template("home.html", error=str(e))
 
 if __name__ == "__main__":
+    print('server runs in : http://localhost:5000/')
     app.run(debug=True)
-    print('http://localhost:5000/')
+    
