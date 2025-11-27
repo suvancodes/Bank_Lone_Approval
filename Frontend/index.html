@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Bank Loan Approval - Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body{
+      background: linear-gradient(180deg,#071033 0%, #07142a 100%);
+      color:#ffffff;
+      font-family:system-ui,-apple-system, Roboto;
+      padding-top:72px;
+    }
+    .card{
+      background: rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:12px;
+    }
+    .result-badge{
+      font-size:1.3rem;
+      padding:.5rem 1rem;
+      border-radius:10px;
+      display:inline-block;
+      margin-top:.5rem;
+    }
+    .approved{ background:linear-gradient(90deg,#16a34a,#4ade80); color:#04220b; }
+    .rejected{ background:linear-gradient(90deg,#dc2626,#f97316); color:#3a0b00; }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar fixed-top" style="background:rgba(2,6,23,.85);">
+    <div class="container">
+      <a class="navbar-brand text-white" href="#"><i class="bi bi-bank2 me-2"></i>Bank Loan Approval</a>
+    </div>
+  </nav>
+
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card p-4">
+          <h3 class="mb-3">Loan Approval Prediction</h3>
+
+          <form id="predictForm" class="row g-3">
+
+            <div class="col-12">
+              <label class="form-label">Bank Name</label>
+              <select id="Bank_Name" class="form-select" required>
+                <option value="" disabled selected>Select bank</option>
+                <option value="SBI bank">SBI Bank</option>
+                <option value="AXIX bank">AXIX Bank</option>
+                <option value="HDFC bank">HDFC Bank</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Gender</label>
+              <select id="Gender" class="form-select" required>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Married</label>
+              <select id="Married" class="form-select" required>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Education</label>
+              <select id="Education" class="form-select" required>
+                <option value="1">Graduate</option>
+                <option value="0">Not Graduate</option>
+              </select>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Self Employed</label>
+              <select id="Self_Employed" class="form-select" required>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Applicant Income</label>
+              <input type="number" id="ApplicantIncome" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Coapplicant Income</label>
+              <input type="number" id="CoapplicantIncome" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Loan Amount</label>
+              <input type="number" id="LoanAmount" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Loan Term</label>
+              <input type="number" id="Loan_Amount_Term" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Credit History</label>
+              <select id="Credit_History" class="form-select" required>
+                <option value="1">Good</option>
+                <option value="0">Bad</option>
+              </select>
+            </div>
+
+            <div class="col-12 text-end">
+              <button id="submitBtn" class="btn btn-primary">Predict</button>
+            </div>
+
+          </form>
+
+          <div id="result" class="mt-4" style="display:none;">
+            <h5>Prediction:</h5>
+            <span id="resultLabel" class="result-badge"></span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const BACKEND_URL = "https://bank-lone-approval-1.onrender.com/predict";
+
+    document.getElementById('predictForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+
+      const payload = {
+        Bank_Name: document.getElementById('Bank_Name').value,
+        Gender: document.getElementById('Gender').value,
+        Married: document.getElementById('Married').value,
+        Education: document.getElementById('Education').value,
+        Self_Employed: document.getElementById('Self_Employed').value,
+        ApplicantIncome: document.getElementById('ApplicantIncome').value,
+        CoapplicantIncome: document.getElementById('CoapplicantIncome').value,
+        LoanAmount: document.getElementById('LoanAmount').value,
+        Loan_Amount_Term: document.getElementById('Loan_Amount_Term').value,
+        Credit_History: document.getElementById('Credit_History').value
+      };
+
+      const res = await fetch(BACKEND_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      const label = data?.result?.label;
+
+      const badge = document.getElementById("resultLabel");
+      badge.textContent = label;
+      badge.className = "result-badge " + (label === "Approved" ? "approved" : "rejected");
+
+      document.getElementById('result').style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
