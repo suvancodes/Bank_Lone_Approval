@@ -15,39 +15,39 @@
       font-family:system-ui,-apple-system, Roboto;
       padding-top:72px;
     }
+
+    /* BRIGHT TEXT FIX */
+    h3, h4, h5, label, .form-label {
+      color:#ffffff !important;
+      font-weight:700;
+      opacity:1 !important;
+    }
+
     .navbar-brand{
       color:white !important;
       font-weight:600;
     }
+
+    /* FIX CARD VISIBILITY */
     .card{
-      background: rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.12) !important;
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,0.25);
       border-radius:14px;
     }
 
-    /* Make all labels bright white */
-    .form-label {
-      color: #ffffff !important;
-      font-weight:600;
-    }
-
-    /* Improved input readability */
+    /* FORM INPUTS HIGH-CONTRAST */
     .form-select,
     .form-control {
       background:#f7f9fc;
       color:#041428;
-      border:1px solid rgba(255,255,255,0.1);
+      border:1px solid rgba(0,0,0,0.25);
       height:46px;
       font-weight:500;
     }
+
     .form-control::placeholder {
       color:#666;
-      font-weight:400;
-    }
-
-    /* Improved select options */
-    select option {
-      color:#041428;
     }
 
     .result-badge{
@@ -57,10 +57,12 @@
       display:inline-block;
       margin-top:.5rem;
     }
+
     .approved{
       background:linear-gradient(90deg,#16a34a,#4ade80);
       color:#04220b;
     }
+
     .rejected{
       background:linear-gradient(90deg,#dc2626,#f97316);
       color:#3a0b00;
@@ -86,7 +88,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="card p-4">
-          <h3 class="mb-3 text-white">Loan Approval Prediction</h3>
+          <h3 class="mb-3">Loan Approval Prediction</h3>
 
           <form id="predictForm" class="row g-3">
 
@@ -168,7 +170,7 @@
           </form>
 
           <div id="result" class="mt-4" style="display:none;">
-            <h5 class="text-white">Prediction:</h5>
+            <h5>Prediction:</h5>
             <span id="resultLabel" class="result-badge"></span>
           </div>
 
