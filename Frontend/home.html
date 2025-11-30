@@ -24,14 +24,13 @@
     .card{
       background: rgba(255,255,255,0.12);
       border-radius:16px;
-      border:1px solid rgba(255,255,255,0.2);
+      border:1px solid rgba(255,255,255,0.20);
       backdrop-filter: blur(10px);
     }
 
     h3, label, .form-label {
       color:white !important;
       font-weight:700;
-      opacity:1 !important;  /* FIX VISIBILITY */
     }
 
     .form-control, .form-select{
@@ -113,7 +112,7 @@
             <div class="col-12">
               <label class="form-label">Bank Name</label>
               <select id="Bank_Name" class="form-select" required>
-                <option disabled selected>Select bank</option>
+                <option disabled selected value="">Select bank</option>
                 <option value="SBI bank">SBI Bank</option>
                 <option value="AXIX bank">AXIX Bank</option>
                 <option value="HDFC bank">HDFC Bank</option>
@@ -124,6 +123,7 @@
             <div class="col-md-3">
               <label class="form-label">Gender</label>
               <select id="Gender" class="form-select">
+                <option value="">Select</option>
                 <option value="1">Male</option>
                 <option value="0">Female</option>
               </select>
@@ -132,6 +132,7 @@
             <div class="col-md-3">
               <label class="form-label">Married</label>
               <select id="Married" class="form-select">
+                <option value="">Select</option>
                 <option value="1">Yes</option>
                 <option value="0">No</option>
               </select>
@@ -140,6 +141,7 @@
             <div class="col-md-3">
               <label class="form-label">Education</label>
               <select id="Education" class="form-select">
+                <option value="">Select</option>
                 <option value="1">Graduate</option>
                 <option value="0">Not Graduate</option>
               </select>
@@ -148,6 +150,7 @@
             <div class="col-md-3">
               <label class="form-label">Self Employed</label>
               <select id="Self_Employed" class="form-select">
+                <option value="">Select</option>
                 <option value="0">No</option>
                 <option value="1">Yes</option>
               </select>
@@ -169,13 +172,14 @@
             </div>
 
             <div class="col-md-6">
-              <label class="form-label">Loan Term</label>
+              <label class="form-label">Loan Term (months)</label>
               <input type="number" id="Loan_Amount_Term" class="form-control" placeholder="360">
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Credit History</label>
               <select id="Credit_History" class="form-select">
+                <option value="">Select</option>
                 <option value="1">Good</option>
                 <option value="0">Bad</option>
               </select>
@@ -210,7 +214,23 @@
     document.getElementById('predictForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
 
-      // Show loading, hide old results
+      // IDs of all fields
+      const fields = [
+        "Bank_Name", "Gender", "Married", "Education", "Self_Employed",
+        "ApplicantIncome", "CoapplicantIncome", "LoanAmount",
+        "Loan_Amount_Term", "Credit_History"
+      ];
+
+      // VALIDATION — check if all fields are filled
+      for (let id of fields) {
+        const value = document.getElementById(id).value;
+        if (value === "" || value === null) {
+          alert("⚠ Please fill all the fields before predicting.");
+          return;
+        }
+      }
+
+      // Show loading
       document.getElementById("loadingBox").style.display = "block";
       document.getElementById("result").style.display = "none";
 
@@ -238,26 +258,25 @@
 
       const box = document.getElementById("resultBox");
 
-      // Show proper message
+      // RESULT MESSAGE
       if(label === "Approved"){
         box.innerHTML = `
           <div class="approved">
             <strong>Loan Approved ✔</strong><br>
-            Great! Based on your details, your loan has high chances of approval.
+            Great! Your loan is likely to be approved.
           </div>`;
-      }
-      else{
+      } 
+      else {
         box.innerHTML = `
           <div class="rejected">
             <strong>Loan Rejected ✘</strong><br>
-            Try reducing loan amount or improving credit score.
+            Unfortunately, the loan may not be approved.
           </div>`;
       }
 
-      // Hide loader, show result
+      // Hide loading, show result
       document.getElementById("loadingBox").style.display = "none";
       document.getElementById("result").style.display = "block";
-
     });
   </script>
 
