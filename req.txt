@@ -8,3 +8,4 @@ xgboost
 dill
 Flask
 gunicorn
+flask-cors
