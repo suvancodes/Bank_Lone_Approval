@@ -22,16 +22,23 @@
     }
 
     .card{
-      background: rgba(255,255,255,0.10);
-      border-radius:14px;
+      background: rgba(255,255,255,0.12);
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.2);
       backdrop-filter: blur(10px);
-      border:1px solid rgba(255,255,255,0.18);
+    }
+
+    h3, label, .form-label {
+      color:white !important;
+      font-weight:700;
+      opacity:1 !important;  /* FIX VISIBILITY */
     }
 
     .form-control, .form-select{
-      background:#f8fafc;
-      color:#041428;
+      background:#ffffff;
+      color:#111;
       font-weight:500;
+      height:46px;
     }
 
     .btn-primary{
@@ -40,38 +47,47 @@
       font-weight:600;
     }
 
+    /* RESULT BOX STYLES */
     .approved, .rejected{
       padding:18px;
       border-radius:12px;
-      margin-bottom:10px;
       animation: fadeIn .5s ease-in-out;
+      font-size:1rem;
     }
 
     .approved{
       background:#059669;
       border-left:6px solid #34d399;
+      color:white;
     }
-
     .rejected{
       background:#dc2626;
       border-left:6px solid #f97316;
+      color:white;
     }
 
     @keyframes fadeIn{
-      from{opacity:0; transform:translateY(10px);}
+      from{opacity:0; transform:translateY(8px);}
       to{opacity:1; transform:translateY(0);}
     }
 
-    .bar{
-      height:8px;
-      border-radius:6px;
-      background:#1e293b;
-      margin-top:4px;
+    /* LOADING SPINNER */
+    #loadingBox {
+      display:none;
+      text-align:center;
+      padding:15px;
     }
-
-    .bar-fill{
-      height:100%;
-      border-radius:6px;
+    .spinner{
+      width:38px;
+      height:38px;
+      border:4px solid #ffffff30;
+      border-top-color:white;
+      border-radius:50%;
+      animation: spin 0.8s linear infinite;
+      margin:auto;
+    }
+    @keyframes spin{
+      to{transform:rotate(360deg);}
     }
   </style>
 </head>
@@ -87,6 +103,7 @@
   <main class="container my-4">
     <div class="row justify-content-center">
       <div class="col-lg-8">
+
         <div class="card p-4">
 
           <h3 class="mb-3">Loan Approval Prediction</h3>
@@ -138,22 +155,22 @@
 
             <div class="col-md-4">
               <label class="form-label">Applicant Income</label>
-              <input type="number" id="ApplicantIncome" class="form-control">
+              <input type="number" id="ApplicantIncome" class="form-control" placeholder="5000">
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Coapplicant Income</label>
-              <input type="number" id="CoapplicantIncome" class="form-control">
+              <input type="number" id="CoapplicantIncome" class="form-control" placeholder="0">
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Loan Amount</label>
-              <input type="number" id="LoanAmount" class="form-control">
+              <input type="number" id="LoanAmount" class="form-control" placeholder="150">
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Loan Term</label>
-              <input type="number" id="Loan_Amount_Term" class="form-control">
+              <input type="number" id="Loan_Amount_Term" class="form-control" placeholder="360">
             </div>
 
             <div class="col-md-6">
@@ -165,29 +182,24 @@
             </div>
 
             <div class="col-12 text-end">
-              <button type="submit" class="btn btn-primary">Predict</button>
+              <button id="submitBtn" class="btn btn-primary" type="submit">Predict</button>
             </div>
+
           </form>
 
-          <div id="result" class="mt-4" style="display:none;">
+          <!-- LOADING ANIMATION -->
+          <div id="loadingBox" class="mt-3">
+            <div class="spinner"></div>
+            <p class="mt-2">Checking loan eligibility...</p>
+          </div>
+
+          <!-- RESULT -->
+          <div id="result" style="display:none;" class="mt-4">
             <div id="resultBox"></div>
-            <br>
-
-            <div>
-              <strong>Approval Probability:</strong>
-              <span id="approveText">0%</span>
-              <div class="bar"><div id="approveBar" class="bar-fill" style="background:#10b981;width:0%"></div></div>
-            </div>
-
-            <div class="mt-2">
-              <strong>Rejection Probability:</strong>
-              <span id="rejectText">0%</span>
-              <div class="bar"><div id="rejectBar" class="bar-fill" style="background:#ef4444;width:0%"></div></div>
-            </div>
-
           </div>
 
         </div>
+
       </div>
     </div>
   </main>
@@ -197,6 +209,10 @@
 
     document.getElementById('predictForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
+
+      // Show loading, hide old results
+      document.getElementById("loadingBox").style.display = "block";
+      document.getElementById("result").style.display = "none";
 
       const payload = {
         Bank_Name: document.getElementById('Bank_Name').value,
@@ -219,23 +235,29 @@
 
       const data = await res.json();
       const label = data.result.label;
-      const approveProb = Math.round(data.result.approve_prob * 100);
-      const rejectProb = Math.round(data.result.reject_prob * 100);
 
-      // Update main message
       const box = document.getElementById("resultBox");
-      box.innerHTML = label === "Approved"
-        ? `<div class="approved"><strong>Loan Approved ✔</strong><br>Your application looks strong.</div>`
-        : `<div class="rejected"><strong>Loan Rejected ✘</strong><br>Consider improving credit score or lowering loan amount.</div>`;
 
-      // Update percentages
-      document.getElementById("approveText").innerText = approveProb + "%";
-      document.getElementById("rejectText").innerText = rejectProb + "%";
+      // Show proper message
+      if(label === "Approved"){
+        box.innerHTML = `
+          <div class="approved">
+            <strong>Loan Approved ✔</strong><br>
+            Great! Based on your details, your loan has high chances of approval.
+          </div>`;
+      }
+      else{
+        box.innerHTML = `
+          <div class="rejected">
+            <strong>Loan Rejected ✘</strong><br>
+            Try reducing loan amount or improving credit score.
+          </div>`;
+      }
 
-      document.getElementById("approveBar").style.width = approveProb + "%";
-      document.getElementById("rejectBar").style.width = rejectProb + "%";
+      // Hide loader, show result
+      document.getElementById("loadingBox").style.display = "none";
+      document.getElementById("result").style.display = "block";
 
-      document.getElementById('result').style.display = "block";
     });
   </script>
 
