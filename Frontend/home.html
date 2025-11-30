@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Loan Approval Prediction</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,105 +13,65 @@
       background: linear-gradient(180deg,#071033 0%, #07142a 100%);
       color:#ffffff;
       font-family:system-ui,-apple-system, Roboto;
-      padding-top:72px;
-    }
-
-    h3, label, .form-label {
-      color:#ffffff !important;
-      font-weight:700;
+      padding-top:80px;
     }
 
     .navbar-brand{
-      color:white !important;
       font-weight:600;
+      color:white !important;
     }
 
     .card{
       background: rgba(255,255,255,0.10);
+      border-radius:14px;
       backdrop-filter: blur(10px);
       border:1px solid rgba(255,255,255,0.18);
-      border-radius:14px;
     }
 
-    .form-select,
-    .form-control {
-      background:#f7f9fc;
+    .form-control, .form-select{
+      background:#f8fafc;
       color:#041428;
-      height:46px;
       font-weight:500;
     }
 
-    .btn-primary {
-      background: linear-gradient(90deg,#06b6d4,#4f46e5);
-      border:0;
+    .btn-primary{
+      background:linear-gradient(90deg,#06b6d4,#4f46e5);
+      border:none;
       font-weight:600;
     }
 
-    /* RESULT BOX STYLES - match screenshot */
-    .result-card {
-      border-radius:14px;
+    .approved, .rejected{
       padding:18px;
-      margin-top:18px;
-      box-shadow: 0 10px 20px rgba(2,6,23,0.6);
-    }
-
-    .rejected {
-      background: linear-gradient(0deg,#e11d48,#dc2626);
-      color: #fff;
-      position: relative;
-      border-radius: 12px;
-      padding: 18px;
-    }
-    /* orange left stripe */
-    .rejected::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 12px;
-      background: linear-gradient(180deg,#ff7a18,#ff4f00);
-      border-top-left-radius: 12px;
-      border-bottom-left-radius: 12px;
-    }
-
-    .rejected h4, .rejected p { margin:0; padding-left: 16px; } /* leave space for stripe */
-
-    .approved {
-      background: linear-gradient(90deg,#10b981,#059669);
-      color: #04220b;
       border-radius:12px;
-      padding:14px;
+      margin-bottom:10px;
+      animation: fadeIn .5s ease-in-out;
     }
 
-    .percent-row {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      margin-top:12px;
+    .approved{
+      background:#059669;
+      border-left:6px solid #34d399;
     }
 
-    .percent-bar {
-      flex:1;
-      height:12px;
-      background:#0f172a;
+    .rejected{
+      background:#dc2626;
+      border-left:6px solid #f97316;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(10px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    .bar{
+      height:8px;
       border-radius:6px;
-      overflow:hidden;
+      background:#1e293b;
+      margin-top:4px;
     }
 
-    .percent-fill {
-      height:12px;
+    .bar-fill{
+      height:100%;
       border-radius:6px;
-    }
-
-    .percent-label {
-      min-width:110px;
-      font-weight:600;
-      color:#fff;
-    }
-
-    @media (max-width:767px){
-      .percent-label { min-width:90px; font-size:14px; }
     }
   </style>
 </head>
@@ -124,10 +84,11 @@
     </div>
   </nav>
 
-  <main class="container my-5">
+  <main class="container my-4">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="card p-4">
+
           <h3 class="mb-3">Loan Approval Prediction</h3>
 
           <form id="predictForm" class="row g-3">
@@ -135,7 +96,7 @@
             <div class="col-12">
               <label class="form-label">Bank Name</label>
               <select id="Bank_Name" class="form-select" required>
-                <option value="" disabled selected>Select bank</option>
+                <option disabled selected>Select bank</option>
                 <option value="SBI bank">SBI Bank</option>
                 <option value="AXIX bank">AXIX Bank</option>
                 <option value="HDFC bank">HDFC Bank</option>
@@ -145,7 +106,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Gender</label>
-              <select id="Gender" class="form-select" required>
+              <select id="Gender" class="form-select">
                 <option value="1">Male</option>
                 <option value="0">Female</option>
               </select>
@@ -153,7 +114,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Married</label>
-              <select id="Married" class="form-select" required>
+              <select id="Married" class="form-select">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
               </select>
@@ -161,7 +122,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Education</label>
-              <select id="Education" class="form-select" required>
+              <select id="Education" class="form-select">
                 <option value="1">Graduate</option>
                 <option value="0">Not Graduate</option>
               </select>
@@ -169,7 +130,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Self Employed</label>
-              <select id="Self_Employed" class="form-select" required>
+              <select id="Self_Employed" class="form-select">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
               </select>
@@ -177,42 +138,53 @@
 
             <div class="col-md-4">
               <label class="form-label">Applicant Income</label>
-              <input type="number" id="ApplicantIncome" class="form-control" placeholder="5000" required>
+              <input type="number" id="ApplicantIncome" class="form-control">
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Coapplicant Income</label>
-              <input type="number" id="CoapplicantIncome" class="form-control" placeholder="0" required>
+              <input type="number" id="CoapplicantIncome" class="form-control">
             </div>
 
             <div class="col-md-4">
               <label class="form-label">Loan Amount</label>
-              <input type="number" id="LoanAmount" class="form-control" placeholder="128" required>
+              <input type="number" id="LoanAmount" class="form-control">
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Loan Term</label>
-              <input type="number" id="Loan_Amount_Term" class="form-control" placeholder="360" required>
+              <input type="number" id="Loan_Amount_Term" class="form-control">
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Credit History</label>
-              <select id="Credit_History" class="form-select" required>
+              <select id="Credit_History" class="form-select">
                 <option value="1">Good</option>
                 <option value="0">Bad</option>
               </select>
             </div>
 
             <div class="col-12 text-end">
-              <button id="submitBtn" class="btn btn-primary" type="submit">Predict</button>
+              <button type="submit" class="btn btn-primary">Predict</button>
             </div>
-
           </form>
 
-          <!-- RESULT AREA -->
-          <div id="resultArea" style="display:none;">
-            <div id="resultCard" class="result-card"></div>
-            <div id="percentSection" class="mt-3"></div>
+          <div id="result" class="mt-4" style="display:none;">
+            <div id="resultBox"></div>
+            <br>
+
+            <div>
+              <strong>Approval Probability:</strong>
+              <span id="approveText">0%</span>
+              <div class="bar"><div id="approveBar" class="bar-fill" style="background:#10b981;width:0%"></div></div>
+            </div>
+
+            <div class="mt-2">
+              <strong>Rejection Probability:</strong>
+              <span id="rejectText">0%</span>
+              <div class="bar"><div id="rejectBar" class="bar-fill" style="background:#ef4444;width:0%"></div></div>
+            </div>
+
           </div>
 
         </div>
@@ -222,8 +194,6 @@
 
   <script>
     const BACKEND_URL = "https://bank-lone-approval-1.onrender.com/predict";
-
-    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
     document.getElementById('predictForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
@@ -241,83 +211,31 @@
         Credit_History: document.getElementById('Credit_History').value
       };
 
-      // show loading state
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Predicting...';
+      const res = await fetch(BACKEND_URL,{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
 
-      try {
-        const res = await fetch(BACKEND_URL,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
+      const data = await res.json();
+      const label = data.result.label;
+      const approveProb = Math.round(data.result.approve_prob * 100);
+      const rejectProb = Math.round(data.result.reject_prob * 100);
 
-        const data = await res.json();
+      // Update main message
+      const box = document.getElementById("resultBox");
+      box.innerHTML = label === "Approved"
+        ? `<div class="approved"><strong>Loan Approved ✔</strong><br>Your application looks strong.</div>`
+        : `<div class="rejected"><strong>Loan Rejected ✘</strong><br>Consider improving credit score or lowering loan amount.</div>`;
 
-        if(!data || data.success !== true){
-          throw new Error(data?.error || 'No response from server');
-        }
+      // Update percentages
+      document.getElementById("approveText").innerText = approveProb + "%";
+      document.getElementById("rejectText").innerText = rejectProb + "%";
 
-        const result = data.result || {};
-        const label = result.label;
-        const approval = Number(result.approval_percent ?? 0);
-        const reject = Number(result.reject_percent ?? 0);
+      document.getElementById("approveBar").style.width = approveProb + "%";
+      document.getElementById("rejectBar").style.width = rejectProb + "%";
 
-        // show the big result card
-        const card = document.getElementById('resultCard');
-        const percentSection = document.getElementById('percentSection');
-        const resultArea = document.getElementById('resultArea');
-
-        if(label === "Approved"){
-          card.innerHTML = `
-            <div class="approved">
-              <h4>Loan Approved ✔</h4>
-              <p style="margin-top:8px; margin-bottom:0;">
-                Great! Based on the provided details, your loan application has high chances of approval.
-              </p>
-            </div>
-          `;
-        } else {
-          card.innerHTML = `
-            <div class="rejected">
-              <h4>Loan Rejected ✘</h4>
-              <p style="margin-top:8px; margin-bottom:0;">
-                The model predicts this loan may not be approved. Consider improving credit score or reducing loan amount.
-              </p>
-            </div>
-          `;
-        }
-
-        // show percent bars and numbers
-        const ap = clamp(Math.round(approval*100)/100, 0, 100);
-        const rp = clamp(Math.round(reject*100)/100, 0, 100);
-
-        const approvalWidth = clamp(ap, 0, 100);
-        const rejectWidth = clamp(rp, 0, 100);
-
-        percentSection.innerHTML = `
-          <div class="percent-row">
-            <div class="percent-label">Approval: ${ap}%</div>
-            <div class="percent-bar"><div class="percent-fill" style="width:${approvalWidth}%; background: linear-gradient(90deg,#10b981,#059669);"></div></div>
-          </div>
-          <div class="percent-row" style="margin-top:8px;">
-            <div class="percent-label">Rejection: ${rp}%</div>
-            <div class="percent-bar"><div class="percent-fill" style="width:${rejectWidth}%; background: linear-gradient(90deg,#ff7a18,#ff4f00);"></div></div>
-          </div>
-        `;
-
-        resultArea.style.display = 'block';
-        window.scrollTo({ top: document.getElementById('resultArea').offsetTop - 60, behavior: 'smooth' });
-
-      } catch (err) {
-        console.error('Prediction error:', err);
-        alert('Prediction failed: ' + (err.message || err));
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-      }
+      document.getElementById('result').style.display = "block";
     });
   </script>
 
