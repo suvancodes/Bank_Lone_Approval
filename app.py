@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from flask_cors import CORS
 from src.pipeline.prediction_pipeline import CustomData, PredictPipeline
 import os
 
 app = Flask(__name__)
+CORS(app)  # 🔥 THIS ALLOWS REQUESTS FROM VERCEL FRONTEND
+
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret")  # required for session
 
 @app.route("/", methods=["GET"])
@@ -19,10 +22,8 @@ def _to_number(v, cast=int, default=0):
     except Exception:
         return default
 
-@app.route("/predict", methods=["GET", "POST"])
+@app.route("/predict", methods=["POST"])
 def predict():
-    if request.method == "GET":
-        return redirect(url_for("index"))
 
     try:
         payload = request.get_json() if request.is_json else request.form.to_dict()
@@ -45,18 +46,15 @@ def predict():
         pred = int(preds[0]) if hasattr(preds, "__len__") else int(preds)
         label = "Approved" if pred == 1 else "Rejected"
 
-        # JSON/AJAX clients get JSON response
-        if request.is_json:
-            return {"success": True, "result": {"label": label, "prediction": pred}}, 200
-
-        # For form POSTs: store result in session and redirect to result page
-        session['last_result'] = label
-        return redirect(url_for('result'))
+        # ALWAYS RETURN JSON (frontend uses JS fetch)
+        return {
+            "success": True,
+            "result": {"label": label, "prediction": pred}
+        }, 200
 
     except Exception as e:
-        if request.is_json:
-            return {"success": False, "error": str(e)}, 500
-        return render_template("home.html", error=str(e))
+        return {"success": False, "error": str(e)}, 500
+
 
 @app.route("/result", methods=["GET"])
 def result():
