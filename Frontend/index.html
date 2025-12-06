@@ -135,8 +135,8 @@
         </p>
 
         <p class="mt-3" style="color:var(--text-dim); font-size:17px;">
-          An advanced Machine Learning system that predicts loan approval based on your financial & personal details.
-          Fast. Accurate. User-friendly.
+          An advanced Machine Learning system designed to predict loan approval based on financial and personal information.
+          Get instant eligibility results in seconds.
         </p>
 
         <div class="mt-4">
@@ -153,9 +153,9 @@
         <div class="hero-card animate__animated animate__fadeInRight">
           <h4 class="mb-2">Project Overview</h4>
           <p style="color:var(--text-dim); line-height:1.6;">
-            This ML-based system evaluates applicant information like income, credit score,
-            employment status, and loan amount to predict approval chances.
-            Built using Python, Flask, Scikit-Learn, deployed on Render + Vercel.
+            This ML-based system analyzes applicant details such as income, credit score,
+            employment status, and loan amount to predict approval likelihood.
+            Built using Python, Flask, Scikit-Learn & XGBoost, deployed on Render + Vercel.
           </p>
         </div>
       </div>
@@ -173,7 +173,7 @@
         <div class="feature-box">
           <i class="bi bi-lightning-charge-fill"></i>
           <h5 class="mt-3">Instant Predictions</h5>
-          <p style="color:var(--text-dim)">ML inference in milliseconds.</p>
+          <p style="color:var(--text-dim)">Fast & accurate ML inference within milliseconds.</p>
         </div>
       </div>
 
@@ -181,7 +181,7 @@
         <div class="feature-box">
           <i class="bi bi-shield-lock-fill"></i>
           <h5 class="mt-3">Secure & Private</h5>
-          <p style="color:var(--text-dim)">Your data is never stored — prediction is instant.</p>
+          <p style="color:var(--text-dim)">No data stored — prediction happens instantly on backend.</p>
         </div>
       </div>
 
@@ -189,7 +189,7 @@
         <div class="feature-box">
           <i class="bi bi-calculator"></i>
           <h5 class="mt-3">EMI Calculator</h5>
-          <p style="color:var(--text-dim)">Plan loans easily with built-in EMI calculator.</p>
+          <p style="color:var(--text-dim)">Plan your loan and check EMI with a simple calculator.</p>
         </div>
       </div>
 
@@ -202,11 +202,13 @@
     Powered by Machine Learning & Flask.
   </footer>
 
-  <!-- 🟦 Backend Wake-up Script (Makes Predictions Faster) -->
+  <!-- ===================== AUTO-PING SCRIPT ===================== -->
   <script>
-    fetch("https://bank-lone-approval-1.onrender.com/")
-      .then(() => console.log("Backend wake-up triggered."))
-      .catch(() => console.log("Backend warming..."));
+    setInterval(() => {
+      fetch("https://bank-lone-approval-1.onrender.com/")
+        .then(() => console.log("Backend Pinged ✔"))
+        .catch(() => console.log("Ping Failed ❌"));
+    }, 240000); // every 4 minutes
   </script>
 
 </body>
