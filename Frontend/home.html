@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Loan Approval Prediction</title>
 
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -12,96 +13,78 @@
     body{
       background: linear-gradient(180deg,#071033 0%, #07142a 100%);
       color:#ffffff;
-      font-family:system-ui,-apple-system, Roboto;
-      padding-top:72px;
+      font-family:system-ui,-apple-system,Roboto;
+      padding-top:80px;
     }
 
-    h3, label, .form-label {
-      color:#ffffff !important;
-      font-weight:700;
-    }
-
-    .navbar-brand{
-      color:white !important;
-      font-weight:600;
-    }
+    .navbar-brand{ color:white !important; font-weight:600; }
+    h3, label { color:white !important; font-weight:700; }
 
     .card{
       background: rgba(255,255,255,0.10);
+      border:1px solid rgba(255,255,255,0.20);
       backdrop-filter: blur(10px);
-      border:1px solid rgba(255,255,255,0.18);
       border-radius:14px;
     }
 
-    .form-select,
-    .form-control {
-      background:#f7f9fc;
+    .form-control, .form-select{
+      background:#f1f5f9;
       color:#041428;
       height:46px;
       font-weight:500;
     }
 
-    .btn-primary {
+    .btn-primary{
       background: linear-gradient(90deg,#06b6d4,#4f46e5);
       border:0;
       font-weight:600;
     }
 
-    /* Result styles */
-    .approved, .rejected{
-      padding:18px;
-      border-radius:12px;
-      animation: fadeIn 0.5s ease-in-out;
-      font-size:1.1rem;
-    }
-    .approved{
-      background:#16a34a;
-      color:white;
-      border-left:6px solid #22c55e;
-    }
-    .rejected{
-      background:#dc2626;
-      color:white;
-      border-left:6px solid #f97316;
-    }
-
-    /* Loader */
-    .loader {
+    /* LOADER */
+    .loader{
       border: 6px solid rgba(255,255,255,0.2);
       border-top: 6px solid #4f46e5;
       border-radius: 50%;
       width: 45px;
       height: 45px;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
+      margin:auto;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 
-    @keyframes fadeIn {
-      from { opacity:0; transform: translateY(10px); }
-      to { opacity:1; transform: translateY(0); }
+    /* RESULT */
+    .approved, .rejected{
+      padding:18px;
+      border-radius:12px;
+      font-size:1.1rem;
+      animation: fadeIn .5s ease-in-out;
     }
+    .approved{ background:#16a34a; border-left:6px solid #22c55e; }
+    .rejected{ background:#dc2626; border-left:6px solid #f97316; }
+
+    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
   </style>
 </head>
 
 <body>
 
+  <!-- NAVBAR -->
   <nav class="navbar fixed-top" style="background:rgba(2,6,23,.85);">
-    <div class="container">
-      <a class="navbar-brand" href="index.html"><i class="bi bi-bank2 me-2"></i>Bank Loan Approval</a>
+    <div class="container d-flex justify-content-between">
+      <a class="navbar-brand"><i class="bi bi-bank2 me-2"></i>Loan Approval Predictor</a>
+      <a href="emi.html" class="btn btn-outline-light btn-sm">EMI Calculator</a>
     </div>
   </nav>
 
+  <!-- MAIN FORM -->
   <main class="container my-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
         <div class="card p-4">
+
           <h3 class="mb-3">Loan Approval Prediction</h3>
 
-          <!-- ================= FORM ================= -->
+          <!-- FORM -->
           <form id="predictForm" class="row g-3">
 
             <div class="col-12">
@@ -117,7 +100,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Gender</label>
-              <select id="Gender" class="form-select" required>
+              <select id="Gender" class="form-select">
                 <option value="1">Male</option>
                 <option value="0">Female</option>
               </select>
@@ -125,7 +108,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Married</label>
-              <select id="Married" class="form-select" required>
+              <select id="Married" class="form-select">
                 <option value="1">Yes</option>
                 <option value="0">No</option>
               </select>
@@ -133,7 +116,7 @@
 
             <div class="col-md-3">
               <label class="form-label">Education</label>
-              <select id="Education" class="form-select" required>
+              <select id="Education" class="form-select">
                 <option value="1">Graduate</option>
                 <option value="0">Not Graduate</option>
               </select>
@@ -141,89 +124,56 @@
 
             <div class="col-md-3">
               <label class="form-label">Self Employed</label>
-              <select id="Self_Employed" class="form-select" required>
+              <select id="Self_Employed" class="form-select">
                 <option value="0">No</option>
                 <option value="1">Yes</option>
               </select>
             </div>
 
+            <!-- UNITS UPDATED -->
             <div class="col-md-4">
-              <label class="form-label">Applicant Income</label>
+              <label class="form-label">Applicant Income (₹ / Month)</label>
               <input type="number" id="ApplicantIncome" class="form-control" placeholder="5000" required>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Coapplicant Income</label>
-              <input type="number" id="CoapplicantIncome" class="form-control" placeholder="0" required>
+              <label class="form-label">Co-Applicant Income (₹ / Month)</label>
+              <input type="number" id="CoapplicantIncome" class="form-control" placeholder="1500" required>
             </div>
 
             <div class="col-md-4">
-              <label class="form-label">Loan Amount</label>
-              <input type="number" id="LoanAmount" class="form-control" placeholder="128" required>
+              <label class="form-label">Loan Amount (₹ Thousands)</label>
+              <input type="number" id="LoanAmount" class="form-control" placeholder="128 → ₹128000" required>
             </div>
 
             <div class="col-md-6">
-              <label class="form-label">Loan Term</label>
-              <input type="number" id="Loan_Amount_Term" class="form-control" placeholder="360" required>
+              <label class="form-label">Loan Term (Months)</label>
+              <input type="number" id="Loan_Amount_Term" class="form-control" placeholder="360 months" required>
             </div>
 
             <div class="col-md-6">
               <label class="form-label">Credit History</label>
-              <select id="Credit_History" class="form-select" required>
-                <option value="1">Good</option>
-                <option value="0">Bad</option>
+              <select id="Credit_History" class="form-select">
+                <option value="1">Good (1)</option>
+                <option value="0">Bad (0)</option>
               </select>
             </div>
 
             <div class="col-12 text-end">
-              <button id="submitBtn" class="btn btn-primary" type="submit">Predict</button>
+              <button class="btn btn-primary" type="submit">Predict</button>
             </div>
 
           </form>
 
-          <!-- ================= LOADING ================= -->
-          <div id="loadingBox" class="mt-4 text-center" style="display:none;">
+          <!-- LOADING -->
+          <div id="loadingBox" class="text-center mt-4" style="display:none;">
             <div class="loader"></div>
-            <p class="text-light mt-2">Predicting... Please wait</p>
+            <p class="text-light mt-2">Predicting... please wait</p>
           </div>
 
-          <!-- ================= RESULT ================= -->
+          <!-- RESULT -->
           <div id="result" class="mt-4" style="display:none;">
             <div id="resultBox"></div>
-          </div>
-
-          <!-- ================= EMI CALCULATOR ================= -->
-          <hr class="my-4">
-          <h4>EMI Calculator</h4>
-
-          <div class="row g-3">
-            <div class="col-md-4">
-              <label class="form-label">Interest Rate (%)</label>
-              <input type="number" id="InterestRate" class="form-control" placeholder="10" required>
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label">Loan Amount (₹)</label>
-              <input type="number" id="EMI_LoanAmount" class="form-control" placeholder="100000" required>
-            </div>
-
-            <div class="col-md-4">
-              <label class="form-label">Loan Term (Months)</label>
-              <input type="number" id="EMI_LoanTerm" class="form-control" placeholder="360" required>
-            </div>
-
-            <div class="col-12">
-              <button class="btn btn-secondary mt-2" type="button" onclick="calculateEMI()">Calculate EMI</button>
-            </div>
-          </div>
-
-          <div id="emiResult" class="mt-3" style="display:none;">
-            <div class="card p-3" style="background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.20);">
-              <h6 class="text-white">EMI Result:</h6>
-              <p id="emiValue" class="text-info fw-bold mb-1"></p>
-              <p id="totalInterest" class="text-warning mb-1"></p>
-              <p id="totalAmount" class="text-success mb-1"></p>
-            </div>
           </div>
 
         </div>
@@ -231,38 +181,19 @@
     </div>
   </main>
 
+  <!-- KEEP RENDER SERVER ALIVE -->
+  <script>
+    setInterval(() => {
+      fetch("https://bank-lone-approval-1.onrender.com/")
+      .catch(()=>{});
+    }, 240000);
+  </script>
+
+  <!-- PREDICTION SCRIPT -->
   <script>
     const BACKEND_URL = "https://bank-lone-approval-1.onrender.com/predict";
 
-    // =================== EMI FUNCTION ===================
-    function calculateEMI() {
-      let P = document.getElementById("EMI_LoanAmount").value;
-      let R = document.getElementById("InterestRate").value;
-      let N = document.getElementById("EMI_LoanTerm").value;
-
-      if (!P || !R || !N) {
-        alert("Please fill all EMI fields.");
-        return;
-      }
-
-      P = parseFloat(P);
-      R = parseFloat(R) / 12 / 100;
-      N = parseInt(N);
-
-      const emi = P * R * Math.pow((1+R), N) / (Math.pow((1+R), N) - 1);
-
-      const totalAmount = emi * N;
-      const totalInterest = totalAmount - P;
-
-      document.getElementById("emiValue").innerHTML = `📌 Monthly EMI: ₹ ${emi.toFixed(2)}`;
-      document.getElementById("totalInterest").innerHTML = `💸 Total Interest: ₹ ${totalInterest.toFixed(2)}`;
-      document.getElementById("totalAmount").innerHTML = `💰 Total Payable Amount: ₹ ${totalAmount.toFixed(2)}`;
-
-      document.getElementById("emiResult").style.display = "block";
-    }
-
-    // =================== PREDICTION FUNCTION ===================
-    document.getElementById('predictForm').addEventListener('submit', async (e)=>{
+    document.getElementById("predictForm").addEventListener("submit", async (e)=>{
       e.preventDefault();
 
       const fields = [
@@ -271,9 +202,9 @@
         "Loan_Amount_Term","Credit_History"
       ];
 
-      for (let id of fields) {
-        const value = document.getElementById(id).value;
-        if (value === "" || value === null) {
+      // Validate
+      for (let id of fields){
+        if (!document.getElementById(id).value){
           alert("⚠ Please fill all fields before predicting.");
           return;
         }
@@ -282,48 +213,38 @@
       document.getElementById("loadingBox").style.display = "block";
       document.getElementById("result").style.display = "none";
 
-      const payload = {
-        Bank_Name: document.getElementById('Bank_Name').value,
-        Gender: document.getElementById('Gender').value,
-        Married: document.getElementById('Married').value,
-        Education: document.getElementById('Education').value,
-        Self_Employed: document.getElementById('Self_Employed').value,
-        ApplicantIncome: document.getElementById('ApplicantIncome').value,
-        CoapplicantIncome: document.getElementById('CoapplicantIncome').value,
-        LoanAmount: document.getElementById('LoanAmount').value,
-        Loan_Amount_Term: document.getElementById('Loan_Amount_Term').value,
-        Credit_History: document.getElementById('Credit_History').value
-      };
+      const payload = {};
+      fields.forEach(id => payload[id] = document.getElementById(id).value);
 
       const res = await fetch(BACKEND_URL,{
         method:"POST",
-        headers:{'Content-Type':'application/json'},
+        headers:{ "Content-Type":"application/json" },
         body:JSON.stringify(payload)
       });
 
       const data = await res.json();
       const label = data.result.label;
-
       const box = document.getElementById("resultBox");
 
       if(label === "Approved"){
         box.innerHTML = `
           <div class="approved">
             <strong>Loan Approved ✔</strong><br>
-            Based on your inputs, your loan has good chances of approval.
-          </div>`;
+            Your loan has high chances of approval based on the provided inputs.
+          </div>
+        `;
       } else {
         box.innerHTML = `
           <div class="rejected">
             <strong>Loan Rejected ✘</strong><br>
-            According to the model, this loan may not be approved.
-          </div>`;
+            The model predicts this loan may not be approved.
+          </div>
+        `;
       }
 
       document.getElementById("loadingBox").style.display = "none";
       document.getElementById("result").style.display = "block";
     });
-
   </script>
 
 </body>
